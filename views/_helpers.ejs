@@ -1,0 +1,5 @@
+<%
+  // Expose session to all views
+  const session = typeof locals !== 'undefined' && locals.session ? locals.session : (typeof it !== 'undefined' ? it.session : undefined);
+%>
+

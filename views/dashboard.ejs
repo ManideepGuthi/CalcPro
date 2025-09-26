@@ -1,0 +1,85 @@
+<div class="row g-4">
+  <div class="col-12 col-lg-7">
+    <div class="card bg-black border-secondary h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="h5 mb-0">Calculator</h2>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="aiToggle">
+            <label class="form-check-label" for="aiToggle">AI Assist</label>
+          </div>
+        </div>
+        <div id="calc" class="vstack gap-2">
+          <input id="calc-display" class="form-control form-control-lg bg-dark" readonly />
+          <div class="d-flex gap-3 align-items-center">
+            <button class="btn btn-outline-light btn-sm" id="micBtn" title="Voice input">Start mic 🎤</button>
+            <div id="micViz" class="mic-viz d-none" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <small id="micStatus" class="text-secondary">Type or speak your expression</small>
+          </div>
+          <div class="row g-2">
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="7">7</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="8">8</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="9">9</button></div>
+            <div class="col-3" ><button class="btn btn-secondary w-100" data-key="/">÷</button></div>
+
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="4">4</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="5">5</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="6">6</button></div>
+            <div class="col-3" ><button class="btn btn-secondary w-100" data-key="*">×</button></div>
+
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="1">1</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="2">2</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="3">3</button></div>
+            <div class="col-3" ><button class="btn btn-secondary w-100" data-key="-">−</button></div>
+
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="0">0</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key=".">.</button></div>
+            <div class="col-3" ><button class="btn btn-danger w-100" id="calc-clear">C</button></div>
+            <div class="col-3" ><button class="btn btn-secondary w-100" data-key="+">+</button></div>
+
+            <div class="col-9" ><button class="btn btn-primary w-100" id="calc-equals">=</button></div>
+            <div class="col-3" ><button class="btn btn-outline-light w-100" data-key="%">%</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-5">
+    <div class="card bg-black border-secondary h-100">
+      <div class="card-body">
+        <h2 class="h5">History</h2>
+        <ul id="history" class="list-group list-group-flush">
+          <% if (history && history.length) { %>
+            <% history.forEach(h => { %>
+              <li class="list-group-item bg-black text-light">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <span><%= h.expression %> =</span>
+                    <strong><%= h.result %></strong>
+                  </div>
+                  <button class="btn btn-sm btn-danger" data-delete="<%= h._id %>">🗑</button>
+                </div>
+                <% if (h.steps && h.steps.length) { %>
+                <ol class="mb-0 mt-2 ps-3">
+                  <% h.steps.forEach(s => { %>
+                    <li><%= s %></li>
+                  <% }) %>
+                </ol>
+                <% } %>
+              </li>
+            <% }) %>
+          <% } else { %>
+            <li class="list-group-item bg-black text-light">No history yet.</li>
+          <% } %>
+        </ul>
+        <div class="d-flex justify-content-end mt-3">
+          <button class="btn btn-outline-light btn-sm" id="clearHistory">Clear full history</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
