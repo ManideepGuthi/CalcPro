@@ -13,13 +13,23 @@ const MONGO_URI = 'mongodb://127.0.0.1:27017/calcpro';
 const SESSION_SECRET = 'dev-secret';
 
 // Connect DB
+// mongoose
+//   .connect(MONGO_URI)
+//   .then(() => console.log('MongoDB connected'))
+//   .catch((err) => {
+//     console.error('MongoDB connection error', err);
+//     process.exit(1);
+//   });
+
+const mongoURI =
+  process.env.MONGO_URI ||
+  "mongodb+srv://manideep:manu@todocluster.h76u0nm.mongodb.net/CalcPro?retryWrites=true&w=majority&appName=TodoCluster";
+
 mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => {
-    console.error('MongoDB connection error', err);
-    process.exit(1);
-  });
+  .connect(mongoURI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ Mongo Error:", err));
+
 
 // Views and static
 app.set('view engine', 'ejs');
