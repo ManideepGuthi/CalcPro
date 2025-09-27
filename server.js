@@ -9,26 +9,17 @@ const app = express();
 
 // Basic config (no .env per requirements)
 const PORT = 3000;
-const MONGO_URI = 'mongodb://127.0.0.1:27017/calcpro';
+const MONGO_URI = 'mongodb+srv://manideep:manu@todocluster.h76u0nm.mongodb.net/CalcPro?retryWrites=true&w=majority&appName=TodoCluster';
 const SESSION_SECRET = 'dev-secret';
 
 // Connect DB
-// mongoose
-//   .connect(MONGO_URI)
-//   .then(() => console.log('MongoDB connected'))
-//   .catch((err) => {
-//     console.error('MongoDB connection error', err);
-//     process.exit(1);
-//   });
-
-const mongoURI =
-  process.env.MONGO_URI ||
-  "mongodb+srv://manideep:manu@todocluster.h76u0nm.mongodb.net/?retryWrites=true&w=majority&appName=TodoCluster";
-
 mongoose
-  .connect(mongoURI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ Mongo Error:", err));
+  .connect(MONGO_URI)
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch((err) => {
+    console.error('❌ Mongo Error:', err);
+    process.exit(1);
+  });
 
 
 // Views and static
@@ -92,11 +83,13 @@ app.get('/signup', (req, res) => {
 
 app.post('/signup', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'All fields required' });
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'Email already registered' });
-    const user = await User.create({ name, email, password }); // no bcrypt per requirements
+    const { name, username, email, password } = req.body;
+    if (!name || !username || !email || !password) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'All fields required' });
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'Email already registered' });
+    const existingUsername = await User.findOne({ name: username });
+    if (existingUsername) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'Username already taken' });
+    const user = await User.create({ name: username, email, password }); // no bcrypt per requirements
     req.session.userId = user._id.toString();
     res.redirect('/dashboard');
   } catch (err) {
@@ -112,7 +105,11 @@ app.get('/signin', (req, res) => {
 app.post('/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, password }); // no bcrypt per requirements
+    // Check if input is email or username
+    const isEmail = email.includes('@');
+    const user = isEmail 
+      ? await User.findOne({ email, password })
+      : await User.findOne({ name: email, password });
     if (!user) return res.status(401).render('auth/signin', { title: 'Sign In', error: 'Invalid credentials' });
     req.session.userId = user._id.toString();
     res.redirect('/dashboard');
