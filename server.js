@@ -23,7 +23,7 @@ const SESSION_SECRET = 'dev-secret';
 
 const mongoURI =
   process.env.MONGO_URI ||
-  "mongodb+srv://manu:manu@todocluster.h76u0nm.mongodb.net/?retryWrites=true&w=majority&appName=TodoCluster";
+  "mongodb+srv://manideep:manu@todocluster.h76u0nm.mongodb.net/?retryWrites=true&w=majority&appName=TodoCluster";
 
 mongoose
   .connect(mongoURI)
