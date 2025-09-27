@@ -87,9 +87,9 @@ app.post('/signup', async (req, res) => {
     if (!name || !username || !email || !password) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'All fields required' });
     const existingEmail = await User.findOne({ email });
     if (existingEmail) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'Email already registered' });
-    const existingUsername = await User.findOne({ name: username });
+    const existingUsername = await User.findOne({ username });
     if (existingUsername) return res.status(400).render('auth/signup', { title: 'Sign Up', error: 'Username already taken' });
-    const user = await User.create({ name: username, email, password }); // no bcrypt per requirements
+    const user = await User.create({ name, username, email, password }); // no bcrypt per requirements
     req.session.userId = user._id.toString();
     res.redirect('/dashboard');
   } catch (err) {
@@ -109,7 +109,7 @@ app.post('/signin', async (req, res) => {
     const isEmail = email.includes('@');
     const user = isEmail 
       ? await User.findOne({ email, password })
-      : await User.findOne({ name: email, password });
+      : await User.findOne({ username: email, password });
     if (!user) return res.status(401).render('auth/signin', { title: 'Sign In', error: 'Invalid credentials' });
     req.session.userId = user._id.toString();
     res.redirect('/dashboard');
